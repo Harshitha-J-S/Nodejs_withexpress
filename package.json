@@ -1,0 +1,23 @@
+{
+  "name": "nodejs_withexpress",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Harshitha-J-S/Nodejs_withexpress.git"
+  },
+  "author": "Harshitha-JS",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Harshitha-J-S/Nodejs_withexpress/issues"
+  },
+  "homepage": "https://github.com/Harshitha-J-S/Nodejs_withexpress#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemon": "^3.1.0"
+  }
+}
