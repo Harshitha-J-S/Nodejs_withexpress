@@ -1,0 +1,20 @@
+[
+    {
+        "id":1,
+        "name":"movie1",
+        "releaseYear":2013,
+        "duration":56 
+    },
+    {
+        "id":1,
+        "name":"movie2",
+        "releaseYear":2014,
+        "duration":34
+    },
+    {
+        "id":1,
+        "name":"movie3",
+        "releaseYear":2015,
+        "duration":28
+    }
+]
