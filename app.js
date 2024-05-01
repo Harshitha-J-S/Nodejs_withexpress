@@ -1,14 +1,24 @@
 const express = require('express');
 const fs = require('fs');
-
+const morgan = require('morgan')
 
 let app = express();
 let movies = JSON.parse(fs.readFileSync('./data/movies.json'));
 
 app.use(express.json())  //to attach the request with requestbody we need to use middldeware
 
+app.use(morgan('dev')) // logs the info abt the request
+
+app.use((req , res , next) => {
+      req.requestedAt = new Date().toISOString();
+      next()
+})  // order matters a lot in middleware
+
+
 const getAllMovies =  (req,res) => {
         res.status(200).json({
+            status:"success",
+            requestedAt : req.requestedAt, 
             status:"success",
             data: {
                 movies:movies // JSon format,above movies variable is assigned
