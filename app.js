@@ -31,7 +31,6 @@ app.get('/api/v1/movies/:id',(req,res) => {  //:represents route parameter
     // console.log(req.params)  // params store req parameter of route
     
     const id = req.params.id * 1 // to convert string to int
-    
     let movie = movies.find(el => el.id === id) //el wil iterate through movies array
     
     if(!movie){
@@ -40,7 +39,6 @@ app.get('/api/v1/movies/:id',(req,res) => {  //:represents route parameter
            message:'movie with id' + id + 'is not found'
         })
     }
-    
     res.status(200).json({
         status:"success",
         data: {
@@ -48,6 +46,7 @@ app.get('/api/v1/movies/:id',(req,res) => {  //:represents route parameter
         }
 })
 })
+
 
 app.post('/api/v1/movies',(req,res) =>{
     // console.log(req.body)    // request of new movie to be added
@@ -67,6 +66,36 @@ app.post('/api/v1/movies',(req,res) =>{
     })   
     //res.send('created')  
 }) // here we are goin to create a new movie after creation we need to store back in json file
+
+// put will modify which is sent by client along with entire resourse
+// patch will modify which is sent by client but not the entire resource
+app.patch('/api/v1/movies/:id',(req,res) =>{
+   
+    let id = req.params.id * 1 // to convert string to int
+    let movietoUpdate = movies.find(el => el.id === id)
+
+    if(!movietoUpdate){
+        return res.status(404).json({
+           status:"fail",
+           message:'movie with id' + id + 'is not found'
+        })
+    }
+    let index = movies.indexOf(movietoUpdate) // id=4 then index is 3 works like array with 0 initially
+ 
+    Object.assign(movietoUpdate,req.body); //req.body will have the request sent by user which is in patch argument
+    movies[index] = movietoUpdate;
+    
+    fs.writeFile('./data/movies.json',JSON.stringify(movies),(err) => {
+        res.status(200).json({
+            status:"success",
+            data:{
+                movie:movietoUpdate
+            }
+        })
+    })  
+
+})
+
 
 const port = 3000;
 app.listen(port,() => {
