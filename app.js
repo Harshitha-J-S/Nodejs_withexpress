@@ -1,9 +1,9 @@
 const express = require('express');
-const fs = require('fs');
 const morgan = require('morgan')
+const moviesRouter = require('./Routes/moviesRoutes')
 
 let app = express();
-let movies = JSON.parse(fs.readFileSync('./data/movies.json'));
+
 
 app.use(express.json())  //to attach the request with requestbody we need to use middldeware
 
@@ -15,99 +15,7 @@ app.use((req , res , next) => {
 })  // order matters a lot in middleware
 
 
-const getAllMovies =  (req,res) => {
-        res.status(200).json({
-            status:"success",
-            requestedAt : req.requestedAt, 
-            status:"success",
-            data: {
-                movies:movies // JSon format,above movies variable is assigned
-            }
-        })
-}
-const getMovie = (req,res) => {
-    const id = req.params.id * 1 // to convert string to int
-    let movie = movies.find(el => el.id === id) //el wil iterate through movies array
-    
-    if(!movie){
-        return res.status(404).json({
-           status:"fail",
-           message:'movie with id' + id + 'is not found'
-        })
-    }
-    res.status(200).json({
-        status:"success",
-        data: {
-            movie:movie
-        }
-})
-}
 
-const createMovie = (req,res) =>{
-    const newId = movies[movies.length-1].id + 1;
-    const newMovie = Object.assign({id:newId},req.body) // combines these two abjects
-    
-    movies.push(newMovie); //push the new movie to existing array
-    
-    fs.writeFile('./data/movies.json',JSON.stringify(movies),(err) => {
-        res.status(201).json({
-            status:"success",
-            data:{
-                movie:newMovie
-            }
-        })
-    })   
-    //res.send('created')  
-}
-const updateMovie = (req,res) =>{
-   
-    let id = req.params.id * 1 // to convert string to int
-    let movietoUpdate = movies.find(el => el.id === id)
-
-    if(!movietoUpdate){
-        return res.status(404).json({
-           status:"fail",
-           message:'movie with id' + id + 'is not found'
-        })
-    }
-    let index = movies.indexOf(movietoUpdate) // id=4 then index is 3 works like array with 0 initially
- 
-    Object.assign(movietoUpdate,req.body); //req.body will have the request sent by user which is in patch argument
-    movies[index] = movietoUpdate;
-    
-    fs.writeFile('./data/movies.json',JSON.stringify(movies),(err) => {
-        res.status(200).json({
-            status:"success",
-            data:{
-                movie:movietoUpdate
-            }
-        })
-    })  
-}
-const deleteMovie = (req,res) =>{
-    let id = req.params.id * 1 // to convert string to int
-    let movietoDelete = movies.find(el => el.id === id)
-   
-    if(!movietoDelete){
-        return res.status(404).json({
-           status:"fail",
-           message:'movie with id ' + id + ' is not found'
-        })
-    }
-    
-    let index = movies.indexOf(movietoDelete)
-
-    movies.splice(index,1); // 1 inthe sense it'll delete 1 element
-    
-    fs.writeFile('./data/movies.json',JSON.stringify(movies),(err) => {
-        res.status(204).json({
-            status:"success",
-            data:{
-                movie:null
-            }
-        })
-    })  
-}
 // app.get('/',(req,res) => { //Data is being requested from a specific resource (through some API URL)
 //     //  res.status(200).send('hello');
 //      res.status(200).json({message:'hello json',status:200});
@@ -136,20 +44,8 @@ const deleteMovie = (req,res) =>{
 // app.patch('/api/v1/movies/:id',updateMovie)
 // app.delete('/api/v1/movies/:id',deleteMovie)
 
-const moviesRouter = express.Router();
-moviesRouter.route('/')
-   .get(getAllMovies)
-   .post(createMovie)
 
-moviesRouter.route('/:id')
-    .get(getMovie)
-    .patch(updateMovie)
-    .delete(deleteMovie)
-    
+
 app.use('/api/v1/movies', moviesRouter)
 
-
-const port = 3000;
-app.listen(port,() => {
-    console.log('server started');
-})
+module.exports = app;
