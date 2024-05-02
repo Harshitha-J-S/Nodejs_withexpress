@@ -9,6 +9,8 @@ app.use(express.json())  //to attach the request with requestbody we need to use
 
 app.use(morgan('dev')) // logs the info abt the request
 
+app.use(express.static('./public'))
+
 app.use((req , res , next) => {
       req.requestedAt = new Date().toISOString();
       next()
