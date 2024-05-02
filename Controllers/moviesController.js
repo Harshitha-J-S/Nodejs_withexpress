@@ -1,6 +1,21 @@
 const fs = require('fs');
 let movies = JSON.parse(fs.readFileSync('./data/movies.json'));
 
+exports.checkId = (req,res,next,value)=>{    //param middleware
+    console.log('movie id is'+value);
+
+    let movie = movies.find(el => el.id === value*1) //el wil iterate through movies array
+
+    if (!movie) {
+        return res.status(404).json({
+            status: "fail",
+            message: 'movie with id' + value + 'is not found'
+        })
+    }
+    next();
+}
+
+
 exports.getAllMovies = (req, res) => {
     res.status(200).json({
         status: "success",
@@ -15,12 +30,12 @@ exports.getMovie = (req, res) => {
     const id = req.params.id * 1 // to convert string to int
     let movie = movies.find(el => el.id === id) //el wil iterate through movies array
 
-    if (!movie) {
-        return res.status(404).json({
-            status: "fail",
-            message: 'movie with id' + id + 'is not found'
-        })
-    }
+    // if (!movie) {
+    //     return res.status(404).json({
+    //         status: "fail",
+    //         message: 'movie with id' + id + 'is not found'
+    //     })
+    // }
     res.status(200).json({
         status: "success",
         data: {
@@ -50,12 +65,12 @@ exports.updateMovie = (req, res) => {
     let id = req.params.id * 1 // to convert string to int
     let movietoUpdate = movies.find(el => el.id === id)
 
-    if (!movietoUpdate) {
-        return res.status(404).json({
-            status: "fail",
-            message: 'movie with id' + id + 'is not found'
-        })
-    }
+    // if (!movietoUpdate) {
+    //     return res.status(404).json({
+    //         status: "fail",
+    //         message: 'movie with id' + id + 'is not found'
+    //     })
+    // }
     let index = movies.indexOf(movietoUpdate) // id=4 then index is 3 works like array with 0 initially
 
     Object.assign(movietoUpdate, req.body); //req.body will have the request sent by user which is in patch argument
@@ -74,12 +89,12 @@ exports.deleteMovie = (req, res) => {
     let id = req.params.id * 1 // to convert string to int
     let movietoDelete = movies.find(el => el.id === id)
 
-    if (!movietoDelete) {
-        return res.status(404).json({
-            status: "fail",
-            message: 'movie with id ' + id + ' is not found'
-        })
-    }
+    // if (!movietoDelete) {
+    //     return res.status(404).json({
+    //         status: "fail",
+    //         message: 'movie with id ' + id + ' is not found'
+    //     })
+    // }
 
     let index = movies.indexOf(movietoDelete)
 
