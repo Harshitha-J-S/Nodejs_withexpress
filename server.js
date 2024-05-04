@@ -15,6 +15,39 @@ mongoose.connect(process.env.CONN_STR, {
     console.log('Some error has occured');
 });
 
+const movieSchema = new mongoose.Schema({
+    name : {
+        type : String,
+        required:[true,'Name is required!'],
+        unique:true
+    },
+    description:String,
+    duration: {
+        type : Number,
+        required:[true,'Duration is required!'],
+    },
+    ratings: {
+        type : Number,
+        default : 1.0
+    },
+})
+const Movie = mongoose.model('Movie', movieSchema)
+
+// creating a documnet using model - Movie
+const testMovie = new Movie ({
+    name : "chandan",
+    description:"i don't care",
+    duration:143,
+    ratings: 100
+})
+
+testMovie.save()
+.then(doc => {
+    console.log(doc);
+})
+.catch(err => {
+    console.log("error occured : " + err)
+})
 
 const port = process.env.PORT || 3000;
 
